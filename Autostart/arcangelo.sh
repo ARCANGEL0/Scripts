@@ -24,7 +24,6 @@ sed -i 's/ZSH_THEME=".*"/ZSH_THEME="powerlevel10k/powerlevel10k"/' ~/.zshrc
 # Reload zsh configuration to apply changes
 echo "Reloading zsh configuration..."
 [ -f ~/.bashrc ] && ! grep -Fxq "~/boot" ~/.bashrc && echo '~/boot' >> ~/.bashrc; [ -f ~/.zshrc ] && ! grep -Fxq "~/boot" ~/.zshrc && echo '~/boot' >> ~/.zshrc
-source ~/.zshrc
 
 
 # Installing Cool Retro Term -- Totally required, can't code without those retro screens. 
@@ -33,7 +32,6 @@ wget https://github.com/Swordfish90/cool-retro-term/releases/download/continuous
 mv Cool_Retro_Term-dac2b4f-x86_64.AppImage retro-terminal 
 mv retro-terminal /usr/bin/retro-terminal
 grep 'alias crterm="retro-terminal --fullscreen &"' ~/.zshrc || echo 'alias crterm="retro-terminal --fullscreen &"' >> ~/.zshrc; grep -qxF 'alias crterm="retro-terminal --fullscreen &"' ~/.bashrc || echo 'alias crterm="retro-terminal --fullscreen &"' >> ~/.bashrc
-$SHELL -c 'echo $0' && exec $SHELL 
 echo " Done !"
 clear
 # Done
@@ -45,7 +43,6 @@ cd nnn
 sudo apt-get install pkg-config libncursesw5-dev libreadline-dev -y
 sudo make strip install
 ( [ -f ~/.zshrc ] && echo 'alias ls="nnn -H -de"' >> ~/.zshrc ) || ( [ -f ~/.bashrc ] && echo 'alias ls="nnn -H -de"' >> ~/.bashrc )
-$SHELL -c 'echo $0' && exec $SHELL 
 echo " Done !"
 
 # Done
