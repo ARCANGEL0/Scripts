@@ -68,7 +68,5 @@ echo "Micro and plugins installed successfully!"
 
 
 # Run the terminal 
-
-crterm
-
+zsh -c "crterm"
 
