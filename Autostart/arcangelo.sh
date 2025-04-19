@@ -11,8 +11,9 @@ chsh -s $(which zsh)
 
 # Install Oh My Zsh
 echo "Installing Oh My Zsh..."
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" 
-
+curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o install_ohmyzsh.sh
+sed -i '/exec zsh/d' install_ohmyzsh.sh
+bash install_ohmyzsh.sh
 # Install powerlevel10k theme for Oh My Zsh
 echo "Installing powerlevel10k theme..."
 git clone --depth 1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
