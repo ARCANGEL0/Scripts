@@ -94,6 +94,72 @@ sudo apt-get install curl wget zip git nmap figlet toilet tor python pip3 ffmpeg
 
 clear
 
+FILES_ALIAS="alias files='ls -lah --time-style=long-iso --group-directories-first | awk '\''{size=\$5; owner=\$3; perms=\$1; date=\$6 \" \" \$7; name=\$8; icon=(\$1 ~ /^d/ ? \"[DIR]\" : \"[FILE]\"); printf(\"[%s] :: %s :: %s > %s %s ∆ %s\\n\", owner, perms, date, icon, name, size)}'\'''"
+
+DISK_ALIAS="alias disk='echo -e \"CURRENT FILE SYSTEM FOR [\$(uname -o), \$(hostname)]\\n\" && df -hT | awk '\''NR==1{print \"Filesystem :: Type :: Size :: Used :: Avail :: Mounted on\"; print \"___________________________________________________\"} NR>1{print \$1 \" :: \" \$2 \" :: \" \$3 \" :: \" \$4 \" :: \" \$5 \" :: \" \$7}'\'''"
+
+MEM_ALIAS="alias mem='free -h'"
+
+PORTS_ALIAS="alias ports='ss -tuln'"
+
+UPDATES_ALIAS="alias updates='sudo apt update && sudo apt list --upgradable'"
+
+IPINFO_ALIAS="alias ipinfo='echo Local IP: \$(hostname -I) && echo Public IP: \$(curl -s ifconfig.me)'"
+
+UPTIME_ALIAS="alias uptimeinfo='uptime -p && uptime'"
+
+PSG_ALIAS="alias psg='ps aux | grep -v grep | grep -i'"
+
+EXTRACT_FUNC="
+extract () {
+    if [ -f \"\$1\" ]; then
+        case \"\$1\" in
+            *.tar.bz2)   tar xvjf \"\$1\"    ;;
+            *.tar.gz)    tar xvzf \"\$1\"    ;;
+            *.tar.xz)    tar xvJf \"\$1\"    ;;
+            *.bz2)       bunzip2 \"\$1\"     ;;
+            *.rar)       unrar x \"\$1\"     ;;
+            *.gz)        gunzip \"\$1\"      ;;
+            *.tar)       tar xvf \"\$1\"     ;;
+            *.tbz2)      tar xvjf \"\$1\"    ;;
+            *.tgz)       tar xvzf \"\$1\"    ;;
+            *.zip)       unzip \"\$1\"       ;;
+            *.Z)         uncompress \"\$1\"  ;;
+            *.7z)        7z x \"\$1\"        ;;
+            *)           echo \"Don't know how to extract '\$1'...\" ;;
+        esac
+    else
+        echo \"'\$1' is not a valid file!\"
+    fi
+}
+"
+
+TARGET_FILES=(~/.bashrc ~/.zshrc)
+add_aliases() {
+    for target in "${TARGET_FILES[@]}"; do
+        if [ -f "$target" ]; then
+            {
+                echo ""
+                echo "# === Custom Aliases Installation ==="
+                echo "$FILES_ALIAS"
+                echo "$DISK_ALIAS"
+                echo "$MEM_ALIAS"
+                echo "$PORTS_ALIAS"
+                echo "$UPDATES_ALIAS"
+                echo "$IPINFO_ALIAS"
+                echo "$UPTIME_ALIAS"
+                echo "$PSG_ALIAS"
+                echo "$EXTRACT_FUNC"
+            } >> "$target"
+            echo "Added aliases to $target"
+        fi
+    done
+}
+
+add_aliases
+echo "Installation complete! "
+
+
 echo "📦 Cloning robco-termlink repo into ~/.fallout..."
 sleep 5
 git clone https://github.com/arcangel0/robco-termlink.git "$HOME/.fallout"
