@@ -1,0 +1,38 @@
+#!/bin/bash
+clear
+cols=$(tput cols)
+server_num=$((RANDOM % 10))
+
+type_out() {
+    local str="$1"
+    local i
+    for (( i = 0; i < ${#str}; i++ )); do
+        printf "%s" "${str:$i:1}"
+        sleep 0.02
+    done
+    echo
+}
+
+center() {
+    local str="$1"
+    printf "%*s\n" $(( (${#str} + cols) / 2 )) "$str"
+}
+clear
+center "ROBCO INDUSTRIES (TM) UNIFIED OPERATING SYSTEM"
+sleep 0.2
+center "COPYRIGHT 2075-2077 ROBCO INDUSTRIES"
+sleep 0.2
+center "- SERVER $server_num -"
+sleep 0.2
+printf '%*s\n' "$cols" '' | tr ' ' '-'
+sleep 0.5
+echo
+type_out "Init Boot Agent v2.3.0"
+sleep 0.3
+type_out "RBIOS-4.0.02.08.00 52EE5.E7.E8."
+sleep 0.3
+type_out ">RUN DEBUG/ACCOUNTS.F ADMIN"
+sleep 0.4
+type_out "> Welcome Arcangelo !"
+
+echo
