@@ -95,25 +95,26 @@ sudo apt-get install curl wget zip git nmap figlet toilet tor python pip3 ffmpeg
 clear
 
 
-
 files() {
-    echo -e "OWNER :: PERMISSIONS :: DATE MODIFIED > [TYPE] NAME ∆ SIZE"
-    echo "-------------------------------------------------------------"
+    echo -e "Type  Name  ∆ Size"
+    echo "----------------------------------"
     for item in .* *; do
         [ -e "$item" ] || continue
-        perms=$(stat -c "%A" "$item")
-        owner=$(stat -c "%U" "$item")
-        date=$(stat -c "%y" "$item" | cut -d'.' -f1)
         if [ -d "$item" ]; then
-            icon="[DIR]"
+            icon="📁" # folder emoji
             size=$(du -sh "$item" 2>/dev/null | awk '{print $1}')
-        else
-            icon="[FILE]"
+        elif [ -f "$item" ]; then
+            icon="📄" # file emoji
             size=$(du -h "$item" 2>/dev/null | awk '{print $1}')
+        else
+            icon="❓"
+            size="?"
         fi
-        printf "[%s] :: %s :: %s > %s %s ∆ %s\n" "$owner" "$perms" "$date" "$icon" "$item" "$size"
+        printf "%s  %s  ∆ %s\n" "$icon" "$item" "$size"
     done
 }
+
+
 FILES_ALIAS= files
 DISK_ALIAS="alias disk='echo -e \"CURRENT FILE SYSTEM FOR [\$(uname -o), \$(hostname)]\\n\" && df -hT | awk '\''NR==1{print \"Filesystem :: Type :: Size :: Used :: Avail :: Mounted on\"; print \"___________________________________________________\"} NR>1{print \$1 \" :: \" \$2 \" :: \" \$3 \" :: \" \$4 \" :: \" \$5 \" :: \" \$7}'\'''"
 
