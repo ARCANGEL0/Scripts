@@ -79,6 +79,23 @@ echo "Oh My Zsh installed "
 sleep 5
 clear
 
+echo "Installing some useful scripts for me"
+git clone https://github.com/nil0x42/phpsploit
+cd phpsploit/
+pip3 install -r requirements.txt --break-system-packages
+sudo mv ./phpsploit /usr/bin/ && \
+grep -q "/usr/bin" <<< "$PATH" || echo 'export PATH=$PATH:/usr/bin' >> ${HOME}/.bashrc
+cd $HOME
+
+echo "PHPSploit installed. ✅"
+sleep 5
+clear
+git clone https://github.com/commixproject/commix.git commix
+cd commix
+python3 setup.py install
+echo "Commix installed. ✅"
+clear
+
 echo "Configuring Oh My Zsh to use my theme..."
 git clone https://github.com/egorlem/ultima.zsh-theme ~/.ultima-shell
 echo 'source ~/.ultima-shell/ultima.zsh-theme' >> ~/.zshrc
