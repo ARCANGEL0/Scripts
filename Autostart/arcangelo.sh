@@ -215,6 +215,11 @@ echo "Installation complete! "
 echo "📦 Cloning robco-termlink repo into ~/.fallout..."
 sleep 5
 git clone https://github.com/arcangel0/robco-termlink.git "$HOME/.fallout"
+cd $HOME/.fallout
+chmod +x install.sh
+./install.sh 
+sleep 3
+cd $HOME
 
 if [ $? -ne 0 ]; then
   echo "✅  Termlink Already exists.Skipping."
