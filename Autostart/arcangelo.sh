@@ -93,61 +93,64 @@ sudo apt update -qq > /dev/null 2>&1
 sudo apt-get install curl wget zip git nmap figlet toilet tor python pip3 ffmpeg pv tmux -y curl > /dev/null 2>&1
 
 clear
-
+FILESFUNC="
 files() {
-    sort_order=""
-    if [ "$1" == "-a" ]; then
-        sort_order=""
-    elif [ "$1" == "-z" ]; then
-        sort_order="-r"
+    sort_order=''
+    if [[ \"\$1\" == \"-a\" ]]; then
+        sort_order=\"\"
+    elif [[ \"\$1\" == \"-z\" ]]; then
+        sort_order=\"-r\"
     fi
 
-    temp_list=$(mktemp)
+    temp_list=\$(mktemp)
 
     for item in .* *; do
-        [ -e "$item" ] || continue
-
-        # Fetch owner and last modified
-        owner=$(stat -c "%U" "$item" 2>/dev/null)
-        mod_date=$(stat -c "%y" "$item" 2>/dev/null | cut -d'.' -f1 | cut -d':' -f1-2)
+        [ -e \"\$item\" ] || continue        # Skip non-existent files
+        owner=\$(stat -c \"%U\" \"\$item\" 2>/dev/null)
+        mod_date=\$(stat -c \"%y\" \"\$item\" 2>/dev/null | cut -d'.' -f1 | cut -d':' -f1-2)
 
         # Determine type and size
-        if [ -d "$item" ]; then
-            icon="📁"
-            size=$(du -sb "$item" 2>/dev/null | awk '{print $1}')
-        elif [ -f "$item" ]; then
-            icon="📄"
-            size=$(stat --format="%s" "$item" 2>/dev/null)
+        if [[ -d \"\$item\" ]]; then
+            icon=\" ^=^s^a\"
+            size=\$(du -sb \"\$item\" 2>/dev/null | awk '{print \$1}')
+        elif [[ -f \"\$item\" ]]; then
+            icon=\" ^=^s^d\"
+            size=\$(stat --format=\"%s\" \"\$item\" 2>/dev/null)
         else
-            icon="❓"
+            icon=\" ^}^s\"
             size=0
         fi
 
-        echo -e "$size\t$owner\t$mod_date\t$icon\t$item" >> "$temp_list"
+        echo -e \"\$size\t\$owner\t\$mod_date\t\$icon\t\$item\" >> \"\$temp_list\"
     done
 
-    echo -e "Owner :: (Last Modified) > Type Name // Size"
-    echo "-------------------------------------------------------------"
-
-    sort -n $sort_order "$temp_list" | while IFS=$'\t' read -r size owner mod_date icon name; do
+    echo -e \"Owner :: (Last Modified) > Type Name // Size\"
+    echo \"-------------------------------------------------------------\"
+    sort -n \$sort_order \"\$temp_list\" | while IFS=\$'\\t' read -r size owner mod_date icon name; do
         # Human readable size
-        if [ "$size" -lt 1024 ]; then
-            hsize="${size}B"
-        elif [ "$size" -lt $((1024 * 1024)) ]; then
-            hsize="$(awk "BEGIN {printf \"%.1fKb\", $size/1024}")"
-        elif [ "$size" -lt $((1024 * 1024 * 1024)) ]; then
-            hsize="$(awk "BEGIN {printf \"%.1fMb\", $size/1024/1024}")"
+        if [[ \"\$size\" -lt 1024 ]]; then
+            hsize=\"\$size B\"
+        elif [[ \"\$size\" -lt \$((1024 * 1024)) ]]; then
+            hsize=\"\$(awk \"BEGIN {printf \\\"%.1fKb\\\", \$size/1024}\")\"
+        elif [[ \"\$size\" -lt \$((1024 * 1024 * 1024)) ]]; then
+            hsize=\"\$(awk \"BEGIN {printf \\\"%.1fMb\\\", \$size/1024/1024}\")\"
         else
-            hsize="$(awk "BEGIN {printf \"%.1fGb\", $size/1024/1024/1024}")"
+            hsize=\"\$(awk \"BEGIN {printf \\\"%.1fGb\\\", \$size/1024/1024/1024}\")\"
         fi
 
-        printf "%s :: (%s) > %s %s // %s\n" "$owner" "$mod_date" "$icon" "$name" "$hsize"
+        printf \"%s :: (%s) > %s %s // %s\\n\" \"\$owner\" \"\$mod_date\" \"\$icon\" \"\$name\" \"\$hsize\"
     done
 
-    rm -f "$temp_list"
+    rm -f \"\$temp_list\"
 }
+"
 
-FILES_ALIAS= files
+# Now you can evaluate the function
+eval "$FILESFUNC"
+
+
+
+FILES_ALIAS="alias files='files'"
 DISK_ALIAS="alias disk='echo -e \"CURRENT FILE SYSTEM FOR [\$(uname -o), \$(hostname)]\\n\" && df -hT | awk '\''NR==1{print \"Filesystem :: Type :: Size :: Used :: Avail :: Mounted on\"; print \"___________________________________________________\"} NR>1{print \$1 \" :: \" \$2 \" :: \" \$3 \" :: \" \$4 \" :: \" \$5 \" :: \" \$7}'\'''"
 
 MEM_ALIAS="alias mem='free -h'"
@@ -193,7 +196,10 @@ add_aliases() {
             {
                 echo ""
                 echo "# === Custom Aliases Installation ==="
+                echo "$FILESFUNC"
+
                 echo "$FILES_ALIAS"
+                
                 echo "$DISK_ALIAS"
                 echo "$MEM_ALIAS"
                 echo "$PORTS_ALIAS"
