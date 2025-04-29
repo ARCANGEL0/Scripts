@@ -200,8 +200,6 @@ echo "✅ DONE!"
 sleep 5
 clear
 # Add autostart command if not present
-echo "tmux" >> $HOME/.zshrc
-echo "python3 $HOME/.boot/init.py" >> $HOME/.zshrc
   echo "✅ Added auto-launch to zsh"
   sleep 6
   
