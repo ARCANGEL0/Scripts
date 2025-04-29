@@ -270,7 +270,7 @@ fi
 
 echo "Installing Cool Retro Term for THAT vibe. . . . "
 sudo apt-get install cool-retro-term
-grep 'alias crterm="cool-retro-term --profile 'Futuristic' &"' ~/.zshrc || echo 'alias crterm="cool-retro-term --profile 'Futuristic' &"' >> ~/.zshrc; grep -qxF 'alias crterm="cool-retro-term --profile 'Futuristic' &"' ~/.bashrc || echo 'alias crterm="cool-retro-term --profile 'Futuristic' &"' >> ~/.bashrc
+grep 'alias crterm="cool-retro-term --fullscreen --profile 'Futuristic' &"' ~/.zshrc || echo 'alias crterm="cool-retro-term --fullscreen --profile 'Futuristic' &"' >> ~/.zshrc; grep -qxF 'alias crterm="cool-retro-term --fullscreen --profile 'Futuristic' &"' ~/.bashrc || echo 'alias crterm="cool-retro-term --fullscreen --profile 'Futuristic' &"' >> ~/.bashrc
 
 echo " Done ! Just open crterm on anyterminal or open CRT as application on menu"
 
@@ -311,7 +311,7 @@ cp $HOME/.fallout/fallout.json $HOME/fallout.json
 figlet -f smmono9 "Scripts installed!"
 figlet -f wideterm "// NETRUNNER_INSTALLED++"
 read -n 1 -s -r -p ""
-cool-retro-term --profile 'Futuristic'
+cool-retro-term --fullscreen --profile 'Futuristic'
 PPPID=$(awk '{print $4}' "/proc/$PPID/stat")
 kill $PPPID
 
