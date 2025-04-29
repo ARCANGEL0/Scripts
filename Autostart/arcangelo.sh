@@ -235,17 +235,17 @@ add_aliases
 echo "Installation complete! "
 
 
-echo "📦 Cloning robco-termlink repo into ~/.fallout..."
+echo "📦 Cloning netrunner-cli repo into ~/.boot..."
 sleep 5
-git clone https://github.com/arcangel0/robco-termlink.git "$HOME/.fallout"
-cd $HOME/.fallout
+git clone https://github.com/arcangel0/netrunner-cli.git "$HOME/.boot"
+cd $HOME/.boot
 chmod +x install.sh
 ./install.sh 
 sleep 3
 cd $HOME
 
 if [ $? -ne 0 ]; then
-  echo "✅  Termlink Already exists.Skipping."
+  echo "// NETRUNNER_V3::> Already exists. Skipping."
 fi
 
 echo "✅ DONE!"
@@ -253,22 +253,19 @@ sleep 5
 clear
 # Add autostart command if not present
 echo "tmux" >> $HOME/.zshrc
-echo "python3 $HOME/.fallout/init.py" >> $HOME/.zshrc
+echo "python3 $HOME/.boot/init.py" >> $HOME/.zshrc
   echo "✅ Added auto-launch to zsh"
   sleep 6
   
-echo "alias menu='python3 $HOME/.fallout/fallout.py menu'" >> $HOME/.zshrc
-  echo "✅ Fallout menu command added to ZSH"
-  echo "✅ Type 'menu' anywhere on your terminal to open RobCo menu interface"
+echo "alias menu='python3 $HOME/.boot/boot.py firstMenu'" >> $HOME/.zshrc
+  echo "// NETRUNNER_V3::TERMINAL_INSTALLED. ✅ "
+  echo "✅ Type 'menu' anywhere on your terminal to open Netrunner menu"
   sleep 6
 echo ""
 echo ""
 echo ""
-echo "ROBCO INDUSTRIES (TM) UNIFIED OPERATIONAL SYSTEM INSTALLATION" | pv -qL 50
-echo "CONFIGURING PACKAGES" | pv -qL 30
-echo "TERMINAL COMPONENT NECESSARY" | pv -qL 30
-echo "SET APT UPDATE/MASTER" | pv -qL 40
-echo "APT INSTALLATION/MODE=ROOT:RWED ACCOUNTS.F" | pv -qL 40
+echo "//////// INSTALL_SEQUENCE" | pv -qL 50
+echo ">>> FETCHING PACKAGES" | pv -qL 30
   
 sleep 2
 clear
@@ -340,11 +337,9 @@ elif [ "$SHELL_NAME" == "zsh" ]; then
   sudo cp $HOME/.ezymap/ezymap /usr/bin/
 fi
 
-
-# Installing Cool Retro Term -- Totally required, can't code without those retro screens. 
 echo "Installing Cool Retro Term for THAT vibe. . . . "
 sudo apt-get install cool-retro-term
-grep 'alias crterm="cool-retro-term --fullscreen &"' ~/.zshrc || echo 'alias crterm="cool-retro-term --fullscreen &"' >> ~/.zshrc; grep -qxF 'alias crterm="cool-retro-term --fullscreen &"' ~/.bashrc || echo 'alias crterm="cool-retro-term --fullscreen &"' >> ~/.bashrc
+grep 'alias crterm="cool-retro-term --profile 'Futuristic' &"' ~/.zshrc || echo 'alias crterm="cool-retro-term --profile 'Futuristic' &"' >> ~/.zshrc; grep -qxF 'alias crterm="cool-retro-term --profile 'Futuristic' &"' ~/.bashrc || echo 'alias crterm="cool-retro-term --profile 'Futuristic' &"' >> ~/.bashrc
 
 echo " Done ! Just open crterm on anyterminal or open CRT as application on menu"
 
@@ -383,9 +378,9 @@ echo "Micro and plugins installed successfully! Use 'micro' anywhere now"
 clear
 cp $HOME/.fallout/fallout.json $HOME/fallout.json
 figlet -f smmono9 "Scripts installed!"
-figlet -f wideterm "Press any key to continue on the RobCo Terminal (obs: Click with right button to open settings, and set a custom theme: There is a fallout.json file at $HOME where you can import the custom fallout theme) . . ."
+figlet -f wideterm "// NETRUNNER_INSTALLED++"
 read -n 1 -s -r -p ""
-cool-retro-term --fullscreen & disown
+cool-retro-term --profile 'Futuristic'
 PPPID=$(awk '{print $4}' "/proc/$PPID/stat")
 kill $PPPID
 
