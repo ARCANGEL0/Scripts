@@ -269,32 +269,15 @@ echo ">>> FETCHING PACKAGES" | pv -qL 30
   
 sleep 2
 clear
-echo "🌐 Cloning torall into $HOME/.local/torall/"
-
-git clone https://github.com/bissisoft/torall.git "$HOME/.local/torall/"
-
-if [ $? -ne 0 ]; then
- echo "✅ Tor already exists. Skipping."
-  
-fi
-
-echo "✅ DONE."
-echo "✅ torall downloaded to $HOME/.local/torall/"
-
-echo "🔧 Making build.sh executable..."
-
-chmod +x "$HOME/.local/torall/build.sh"
-
-echo "🚀 Running build.sh..."
-
-cd $HOME/.local/torall
-
-sudo ./build.sh 
-echo "✅ Build complete!"
 
 sleep 5
-cd $HOME
+echo "[::]> INSTALLING TOR PROXY. . . . . . . .   " | pv -qL 60
+echo ""
+echo ""
 
+cd $HOME
+wget https://github.com/JohnMcLaren/torctl-bridged/releases/download/torctl-bridged/torctl-bridged_0.5.7-1_amd64.deb 
+sudo apt install $HOME/torctl-bridged_0.5.7-1_amd64.deb
 clear
 echo "🌐 Installing EzyMap "
 
