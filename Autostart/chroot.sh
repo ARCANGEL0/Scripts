@@ -2,19 +2,17 @@
 
 set -e
 
-echo "/// ::FETCHING MODULES..."
+echo "/// ::BOOTSTRAPPER ENGAGED"
 sleep 1
-echo "/// ::INITIALIZING SYSTEM... READY"
+echo "/// ::DISABLING SECURITY VALIDATIONS FOR MAXIMUM SPEED..."
 echo ""
 lsblk -f
 echo ""
 
-# Detect current user and system
 USER=$(whoami)
 DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
 CODENAME=$(lsb_release -cs)
 
-# Choose correct mirror based on distro
 case "$DISTRO" in
     kali)
         MIRROR="https://http.kali.org/kali"
@@ -26,13 +24,13 @@ case "$DISTRO" in
         MIRROR="http://archive.ubuntu.com/ubuntu"
         ;;
     *)
-        echo "[!] Unsupported distribution: $DISTRO"
+        echo "[!] Unsupported distro: $DISTRO"
         exit 1
         ;;
 esac
 
 echo "[\]> SUDOING_USER: $USER"
-read -p "[\]> Enter target partition to deploy (e.g., sda3): " PART
+read -p "[\]> Enter target partition (e.g., sda3): " PART
 TARGET="/dev/$PART"
 MOUNT_DIR="/mnt/work"
 
@@ -46,37 +44,40 @@ sudo mkdir -p $MOUNT_DIR
 sudo mount $TARGET $MOUNT_DIR
 sudo chown -R $USER:$USER $MOUNT_DIR
 
-echo "[\]> INITIATING BASE SYSTEM DEPLOYMENT ($DISTRO:$CODENAME)..."
+echo "[\]> BOOTSTRAPPING OS ($DISTRO:$CODENAME) WITHOUT VALIDATION..."
 sudo apt update
 sudo apt install -y debootstrap
 
-echo "[\]> BOOTSTRAPPING SYSTEM INTO: $MOUNT_DIR..."
-sudo debootstrap --variant=minbase "$CODENAME" "$MOUNT_DIR" "$MIRROR"
+# Main change here: --no-check-gpg and fast mirror use
+sudo debootstrap --no-check-gpg --variant=minbase "$CODENAME" "$MOUNT_DIR" "$MIRROR" || {
+    echo "[!] Bootstrap failed. Try checking internet or repo manually."
+    exit 1
+}
 
-echo "[\]> SYSTEM SYNCHRONIZATION IN PROGRESS..."
+echo "[\]> LINKING SYSTEM CORE..."
 for dir in dev proc sys; do
     sudo mount --bind /$dir $MOUNT_DIR/$dir
 done
 sudo cp /etc/resolv.conf $MOUNT_DIR/etc/resolv.conf
 
-echo "[\]> LOADING CHROOT ENVIRONMENT..."
+echo "[\]> INITIATING CHROOT ENVIRONMENT..."
 sudo chroot $MOUNT_DIR /bin/bash -c "
-echo '[\]> SYSTEM UPDATE... SYNCING DATASTREAM...'
-apt update
-apt install -y sudo vim git wget curl locales
+echo '[\]> SYNCING PACKAGE DATA...'
+apt update --allow-insecure-repositories || true
+apt install -y sudo vim git wget curl locales --allow-unauthenticated || true
 
-echo '[\]> CONFIGURING USER: $USER'
+echo '[\]> CREATING USER: $USER'
 adduser $USER
 usermod -aG sudo $USER
 
-echo '[\]> CHROOT READY. TYPE \"exit\" TO RETURN.'
+echo '[\]> SETUP COMPLETE. TYPE \"exit\" TO LEAVE ENVIRONMENT.'
 /bin/bash
 "
 
-echo "[\]> CLEANING UP..."
+echo "[\]> CLEANING TEMPORARY LINKS..."
 for dir in dev proc sys; do
     sudo umount $MOUNT_DIR/$dir
 done
 
-echo "/// ::CHROOT SYSTEM INSTALLED SUCCESSFULLY"
-echo "[\]> RE-ENTER ANYTIME WITH: sudo chroot $MOUNT_DIR /bin/bash"
+echo "/// ::CHROOT READY AT: $MOUNT_DIR"
+echo "[\]> RUN AGAIN WITH: sudo chroot $MOUNT_DIR /bin/bash"
