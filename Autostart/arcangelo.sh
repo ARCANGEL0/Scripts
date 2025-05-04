@@ -51,9 +51,6 @@ clear
 # Set zsh as the default shell
 echo "Setting zsh as the default shell..."
 chsh -s $(which zsh)
-
-# Install Oh My Zsh
-# Install Zsh if not present
 if ! command -v zsh &> /dev/null; then
   echo "Zsh not found. Installing..."
   if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -107,248 +104,24 @@ if ! grep -q "^deb .*universe" /etc/apt/sources.list; then
     sudo apt update
 fi
 sudo apt update -qq > /dev/null 2>&1
-sudo apt-get install curl wget zip git nmap figlet toilet tor python pip3 ffmpeg pv tmux -y curl > /dev/null 2>&1
-
+sudo apt-get install curl wget zip git nmap figlet toilet tor python pip3 ffmpeg pv -y curl > /dev/null 2>&1
 clear
-FILESFUNC="
-files() {
-    sort_order=''
-    if [[ \"\$1\" == \"-a\" ]]; then
-        sort_order=\"\"
-    elif [[ \"\$1\" == \"-z\" ]]; then
-        sort_order=\"-r\"
-    fi
-
-    temp_list=\$(mktemp)
-
-    for item in .* *; do
-        [ -e \"\$item\" ] || continue        # Skip non-existent files
-        owner=\$(stat -c \"%U\" \"\$item\" 2>/dev/null)
-        mod_date=\$(stat -c \"%y\" \"\$item\" 2>/dev/null | cut -d'.' -f1 | cut -d':' -f1-2)
-
-        # Determine type and size
-        if [[ -d \"\$item\" ]]; then
-            icon=\" ^=^s^a\"
-            size=\$(du -sb \"\$item\" 2>/dev/null | awk '{print \$1}')
-        elif [[ -f \"\$item\" ]]; then
-            icon=\" ^=^s^d\"
-            size=\$(stat --format=\"%s\" \"\$item\" 2>/dev/null)
-        else
-            icon=\" ^}^s\"
-            size=0
-        fi
-
-        echo -e \"\$size\t\$owner\t\$mod_date\t\$icon\t\$item\" >> \"\$temp_list\"
-    done
-
-    echo -e \"Owner :: (Last Modified) > Type Name // Size\"
-    echo \"-------------------------------------------------------------\"
-    sort -n \$sort_order \"\$temp_list\" | while IFS=\$'\\t' read -r size owner mod_date icon name; do
-        # Human readable size
-        if [[ \"\$size\" -lt 1024 ]]; then
-            hsize=\"\$size B\"
-        elif [[ \"\$size\" -lt \$((1024 * 1024)) ]]; then
-            hsize=\"\$(awk \"BEGIN {printf \\\"%.1fKb\\\", \$size/1024}\")\"
-        elif [[ \"\$size\" -lt \$((1024 * 1024 * 1024)) ]]; then
-            hsize=\"\$(awk \"BEGIN {printf \\\"%.1fMb\\\", \$size/1024/1024}\")\"
-        else
-            hsize=\"\$(awk \"BEGIN {printf \\\"%.1fGb\\\", \$size/1024/1024/1024}\")\"
-        fi
-
-        printf \"%s :: (%s) > %s %s // %s\\n\" \"\$owner\" \"\$mod_date\" \"\$icon\" \"\$name\" \"\$hsize\"
-    done
-
-    rm -f \"\$temp_list\"
-}
-"
-
-# Now you can evaluate the function
-eval "$FILESFUNC"
 
 
-
-FILES_ALIAS="alias files='files'"
-DISK_ALIAS="alias disk='echo -e \"CURRENT FILE SYSTEM FOR [\$(uname -o), \$(hostname)]\\n\" && df -hT | awk '\''NR==1{print \"Filesystem :: Type :: Size :: Used :: Avail :: Mounted on\"; print \"___________________________________________________\"} NR>1{print \$1 \" :: \" \$2 \" :: \" \$3 \" :: \" \$4 \" :: \" \$5 \" :: \" \$7}'\'''"
-
-MEM_ALIAS="alias mem='free -h'"
-
-PORTS_ALIAS="alias ports='ss -tuln'"
-
-UPDATES_ALIAS="alias updates='sudo apt update && sudo apt list --upgradable'"
-
-IPINFO_ALIAS="alias ipinfo='echo Local IP: \$(hostname -I) && echo Public IP: \$(curl -s ifconfig.me)'"
-
-UPTIME_ALIAS="alias uptimeinfo='uptime -p && uptime'"
-
-PSG_ALIAS="alias psg='ps aux | grep -v grep | grep -i'"
-
-EXTRACT_FUNC="
-extract () {
-    if [ -f \"\$1\" ]; then
-        case \"\$1\" in
-            *.tar.bz2)   tar xvjf \"\$1\"    ;;
-            *.tar.gz)    tar xvzf \"\$1\"    ;;
-            *.tar.xz)    tar xvJf \"\$1\"    ;;
-            *.bz2)       bunzip2 \"\$1\"     ;;
-            *.rar)       unrar x \"\$1\"     ;;
-            *.gz)        gunzip \"\$1\"      ;;
-            *.tar)       tar xvf \"\$1\"     ;;
-            *.tbz2)      tar xvjf \"\$1\"    ;;
-            *.tgz)       tar xvzf \"\$1\"    ;;
-            *.zip)       unzip \"\$1\"       ;;
-            *.Z)         uncompress \"\$1\"  ;;
-            *.7z)        7z x \"\$1\"        ;;
-            *)           echo \"Don't know how to extract '\$1'...\" ;;
-        esac
-    else
-        echo \"'\$1' is not a valid file!\"
-    fi
-}
-"
-
-TARGET_FILES=(~/.bashrc ~/.zshrc)
-add_aliases() {
-    for target in "${TARGET_FILES[@]}"; do
-        if [ -f "$target" ]; then
-            {
-                echo ""
-                echo "# === Custom Aliases Installation ==="
-                echo "$FILESFUNC"
-
-                echo "$FILES_ALIAS"
-                
-                echo "$DISK_ALIAS"
-                echo "$MEM_ALIAS"
-                echo "$PORTS_ALIAS"
-                echo "$UPDATES_ALIAS"
-                echo "$IPINFO_ALIAS"
-                echo "$UPTIME_ALIAS"
-                echo "$PSG_ALIAS"
-                echo "$EXTRACT_FUNC"
-            } >> "$target"
-            echo "Added aliases to $target"
-        fi
-    done
-}
-
-add_aliases
-echo "Installation complete! "
-
-
-echo "📦 Cloning robco-termlink repo into ~/.fallout..."
-sleep 5
-git clone https://github.com/arcangel0/robco-termlink.git "$HOME/.fallout"
-cd $HOME/.fallout
-chmod +x install.sh
-./install.sh 
-sleep 3
-cd $HOME
 
 if [ $? -ne 0 ]; then
-  echo "✅  Termlink Already exists.Skipping."
+  echo "// NETRUNNER_V3::> Already exists. Skipping."
 fi
 
 echo "✅ DONE!"
 sleep 5
-clear
-# Add autostart command if not present
-echo "tmux" >> $HOME/.zshrc
-echo "python3 $HOME/.fallout/init.py" >> $HOME/.zshrc
-  echo "✅ Added auto-launch to zsh"
-  sleep 6
-  
-echo "alias menu='python3 $HOME/.fallout/fallout.py menu'" >> $HOME/.zshrc
-  echo "✅ Fallout menu command added to ZSH"
-  echo "✅ Type 'menu' anywhere on your terminal to open RobCo menu interface"
-  sleep 6
 echo ""
 echo ""
 echo ""
-echo "ROBCO INDUSTRIES (TM) UNIFIED OPERATIONAL SYSTEM INSTALLATION" | pv -qL 50
-echo "CONFIGURING PACKAGES" | pv -qL 30
-echo "TERMINAL COMPONENT NECESSARY" | pv -qL 30
-echo "SET APT UPDATE/MASTER" | pv -qL 40
-echo "APT INSTALLATION/MODE=ROOT:RWED ACCOUNTS.F" | pv -qL 40
+echo "//////// INSTALL_SEQUENCE" | pv -qL 50
+echo ">>> FETCHING PACKAGES" | pv -qL 30
   
 sleep 2
-clear
-echo "🌐 Cloning torall into $HOME/.local/torall/"
-
-git clone https://github.com/bissisoft/torall.git "$HOME/.local/torall/"
-
-if [ $? -ne 0 ]; then
- echo "✅ Tor already exists. Skipping."
-  
-fi
-
-echo "✅ DONE."
-echo "✅ torall downloaded to $HOME/.local/torall/"
-
-echo "🔧 Making build.sh executable..."
-
-chmod +x "$HOME/.local/torall/build.sh"
-
-echo "🚀 Running build.sh..."
-
-cd $HOME/.local/torall
-
-sudo ./build.sh 
-echo "✅ Build complete!"
-
-sleep 5
-cd $HOME
-
-clear
-echo "🌐 Installing EzyMap "
-
-git clone https://github.com/ARCANGEL0/EzyMap.git "$HOME/.ezymap"
-if [ $? -ne 0 ]; then
-  echo "❌ Failed to clone ezymap. Exiting."
-fi
-sleep 5
-
-echo "✅ DONE"
-
-echo "🚀 Running install.sh..."
-
-sleep 3
-echo ". . . . . . . . . ." | pv -qL 25
-mkdir -p ~/.local/share/fonts
-[ ! -f ~/.local/share/fonts/starwars.flf ] && curl -o ~/.local/share/fonts/starwars.flf https://raw.githubusercontent.com/xero/figlet-fonts/master/starwars.flf
-[ ! -f ~/.local/share/fonts/Doom.flf ] && curl -o ~/.local/share/fonts/Doom.flf https://raw.githubusercontent.com/xero/figlet-fonts/master/Doom.flf
-
-for i in {1..5}; do
-  echo -n "Loading"
-  for j in {1..3}; do
-    echo -n "."
-    sleep 0.5
-  done
-  echo ""
-done
-
-echo ""
-
-figlet -f ~/.local/share/fonts/starwars.flf "EzyMap"
-
-
-SHELL_NAME=$(basename "$SHELL")
-if [ "$SHELL_NAME" == "bash" ]; then
-  echo "export PATH=\$PATH:$(pwd)" >> ~/.bashrc
-elif [ "$SHELL_NAME" == "zsh" ]; then
-  echo "export PATH=\$PATH:$(pwd)" >> ~/.zshrc
- else
-  sudo cp $HOME/.ezymap/ezymap /usr/bin/
-fi
-
-
-# Installing Cool Retro Term -- Totally required, can't code without those retro screens. 
-echo "Installing Cool Retro Term for THAT vibe. . . . "
-sudo apt-get install cool-retro-term
-grep 'alias crterm="cool-retro-term --fullscreen &"' ~/.zshrc || echo 'alias crterm="cool-retro-term --fullscreen &"' >> ~/.zshrc; grep -qxF 'alias crterm="cool-retro-term --fullscreen &"' ~/.bashrc || echo 'alias crterm="cool-retro-term --fullscreen &"' >> ~/.bashrc
-
-echo " Done ! Just open crterm on anyterminal or open CRT as application on menu"
-
-
 clear
 # Done
 
@@ -379,13 +152,11 @@ micro -plugin install detectindent filemanager manipulator quickfix snippets wak
 
 echo "Micro and plugins installed successfully! Use 'micro' anywhere now"
 
-# Done
-clear
-cp $HOME/.fallout/fallout.json $HOME/fallout.json
-figlet -f smmono9 "Scripts installed!"
-figlet -f wideterm "Press any key to continue on the RobCo Terminal (obs: Click with right button to open settings, and set a custom theme: There is a fallout.json file at $HOME where you can import the custom fallout theme) . . ."
-read -n 1 -s -r -p ""
-cool-retro-term --fullscreen & disown
-PPPID=$(awk '{print $4}' "/proc/$PPID/stat")
-kill $PPPID
-
+echo "📦 Cloning netrunner-cli repo into ~/.boot..."
+sleep 5
+git clone https://github.com/arcangel0/netrunner-cli.git "$HOME/.boot"
+cd $HOME/.boot
+chmod +x install.sh
+./install.sh 
+sleep 3
+cd $HOME
