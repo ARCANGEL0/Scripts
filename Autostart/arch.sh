@@ -17,7 +17,25 @@ echo "[✓] [community] repo disabled."
 
 # ─────────────────────────────────────────────
 # 2. Update System and Install Packages
+conflicting_pkgs=(
+  exodia-assistant
+  lib32-expat
+  lib32-libcap
+  lib32-libffi
+  lib32-libpcap
+  powershell
+  python-serpentarium
+)
+
+echo "[*] Removing conflicting version-locked packages to allow upgrade..."
+for pkg in "${conflicting_pkgs[@]}"; do
+  if pacman -Q "$pkg" &>/dev/null; then
+    echo "Removing $pkg..."
+    sudo pacman -Rdd --noconfirm "$pkg"
+  fi
+done
 # ─────────────────────────────────────────────
+
 echo "[*] Checking for Erlang package conflicts..."
 if pacman -Q erlang-nox &>/dev/null; then
     echo "[!] Conflict detected: removing 'erlang-nox'..."
