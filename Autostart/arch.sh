@@ -18,7 +18,20 @@ echo "[✓] [community] repo disabled."
 # ─────────────────────────────────────────────
 # 2. Update System and Install Packages
 # ─────────────────────────────────────────────
+
+echo "[*] Checking for Java-related package conflicts..."
+if pacman -Q jre11-openjdk &>/dev/null; then
+    echo "[!] Conflict detected: removing 'jre11-openjdk'..."
+    sudo pacman -Rdd --noconfirm jre11-openjdk
+fi
+
+if pacman -Q jre11-openjdk-headless &>/dev/null; then
+    echo "[!] Removing 'jre11-openjdk-headless'..."
+    sudo pacman -Rdd --noconfirm jre11-openjdk-headless
+fi
+
 echo "[*] Removing chaotic-kf5-dummy if present..."
+
 if pacman -Qi chaotic-kf5-dummy &> /dev/null; then
     sudo pacman -Rdd --noconfirm chaotic-kf5-dummy
     echo "[✓] Removed chaotic-kf5-dummy."
