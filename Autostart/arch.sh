@@ -20,6 +20,13 @@ echo "[✓] [community] repo disabled."
 # ─────────────────────────────────────────────
 echo "[*] Updating system..."
 sudo pacman -Syyu --noconfirm
+echo "[*] Removing chaotic-kf5-dummy if present..."
+if pacman -Qi chaotic-kf5-dummy &> /dev/null; then
+    sudo pacman -Rdd --noconfirm chaotic-kf5-dummy
+    echo "[✓] Removed chaotic-kf5-dummy."
+else
+    echo "[i] chaotic-kf5-dummy not installed."
+fi
 
 echo "[*] Installing required packages..."
 sudo pacman -S --noconfirm --needed \
