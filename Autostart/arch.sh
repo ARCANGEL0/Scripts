@@ -18,6 +18,12 @@ echo "[✓] [community] repo disabled."
 # ─────────────────────────────────────────────
 # 2. Update System and Install Packages
 # ─────────────────────────────────────────────
+echo "[*] Checking for Erlang package conflicts..."
+if pacman -Q erlang-nox &>/dev/null; then
+    echo "[!] Conflict detected: removing 'erlang-nox'..."
+    sudo pacman -Rdd --noconfirm erlang-nox
+    echo "[✓] Removed 'erlang-nox'"
+fi
 
 echo "[*] Checking for Java-related package conflicts..."
 if pacman -Q jre11-openjdk &>/dev/null; then
