@@ -115,11 +115,6 @@ else
   echo "XFCE4 Terminal config file not found!"
 fi
 
-# Install eDEX-UI AppImage and set as runnable bin
-echo "Downloading and setting up eDEX-UI AppImage..."
-wget https://github.com/GitSquared/edex-ui/releases/download/v2.2.8/eDEX-UI-Linux-arm64.AppImage -O /usr/local/bin/edex
-sudo chmod +x /usr/local/bin/edex
-
 # Edit BSPWM keybindings
 echo "Editing BSPWM keybindings..."
 BSPWM_KEYBINDINGS="$HOME/.config/bspwm/keybinding/sxhkdrc"
@@ -148,6 +143,10 @@ super + t
 #Firefox
 super + b 
    firefox
+
+super + e
+   thunar
+
 ##---------- Rofi Launcher & Menus ----------##
 
 # Rofi App Launcher #
@@ -319,17 +318,6 @@ EOF
 # Reload bspwm to apply changes
 echo "Reloading BSPWM..."
 bspc wm -r
-
-# Install Zsh and set as default shell
-echo "Installing Zsh and setting as default shell..."
-sudo pacman -S zsh zsh-completions
-
-# Change the default shell to Zsh
-chsh -s $(which zsh)
-
-# Install Oh My Zsh for better configuration
-echo "Installing Oh My Zsh..."
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Configure Zsh prompt and theme
 echo "Configuring Zsh prompt..."
