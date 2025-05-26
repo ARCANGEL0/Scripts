@@ -481,10 +481,8 @@ EOF
 # Ensure ownership
 sudo chown liveuser:liveuser /home/liveuser/.zshrc
 
-
 nitrogen --set-zoom-fill --save $(pwd)/wallpaper2.png
 # wp
 # Reload the shell configuration
-zsh
 
 echo "Setup complete!"
