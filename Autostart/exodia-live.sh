@@ -466,7 +466,7 @@ echo -e "\033[1;31m
 		⠀⠀⠉⠛⢿⣶⣤⡀⠀⠀⠀⣤⣀⣸⣿⣿⡇⣀⡤⠀⠀⠀⢀⣤⣾⡿⠛⠁⠀⠀
 		⠀⠀⠀⠀⠀⠈⠙⠁⣰⣦⣀⠀⠙⠻⣿⡿⠟⠉⠀⣀⣴⣆⠘⠋⠁⠀⠀⠀⠀⠀
 		⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⣿⣦⣄⠀⢀⣠⣴⡿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀
-        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢿⡿⠛⠉⠀
+	        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢿⡿⠛⠉⠀
 \033[0m"
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -480,7 +480,10 @@ EOF
 
 # Ensure ownership
 sudo chown liveuser:liveuser /home/liveuser/.zshrc
-nitrogen --set-zoom-fill --save wallpaper2.png
+
+
+nitrogen --set-zoom-fill --save $(pwd)/wallpaper2.png
+
 # Reload the shell configuration
 zsh
 
