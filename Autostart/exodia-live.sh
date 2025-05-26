@@ -321,7 +321,7 @@ bspc wm -r
 
 # Configure Zsh prompt and theme
 echo "Configuring Zsh prompt..."
-cat <<EOF | sudo tee /home/liveuser/.zshrc
+cat <<"EOF" | sudo tee /home/liveuser/.zshrc
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]];
     
