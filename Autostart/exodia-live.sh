@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Remove /etc/pacman.conf and replace it with the custom configuration
 echo "Removing /etc/pacman.conf..."
 sudo rm -f /etc/pacman.conf
