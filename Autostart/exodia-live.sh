@@ -505,7 +505,6 @@ fi
 
 # change sudo prompt #
 export sudo_PROMPT="[] Enter sudo Password"
-
 EOF
 
 # Reload the shell configuration
