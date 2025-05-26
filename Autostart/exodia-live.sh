@@ -480,7 +480,7 @@ EOF
 
 # Ensure ownership
 sudo chown liveuser:liveuser /home/liveuser/.zshrc
-nitrogen --set-zoom-fill --save --set-wallpaper "wallpaper.jpg"
+nitrogen --set-zoom-fill --save wallpaper2.png
 # Reload the shell configuration
 zsh
 
