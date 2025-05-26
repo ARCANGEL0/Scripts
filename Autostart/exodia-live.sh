@@ -31,14 +31,14 @@ LocalFileSigLevel = Never
 ##########################
 
 ## Core packages repo ##
-[exodia-repo]
-SigLevel = Optional TrustAll
-Server = https://exodia-os.github.io/$repo/$arch
+#[exodia-repo]
+#SigLevel = Optional TrustAll
+#Server = https://exodia-os.github.io/$repo/$arch
 
 ## PenTest packages repo ##
-[Exodia-PenTest-Repo]
-SigLevel = Optional TrustAll
-Server = https://exodia-os.github.io/$repo/$arch
+#[Exodia-PenTest-Repo]
+#SigLevel = Optional TrustAll
+#Server = https://exodia-os.github.io/$repo/$arch
 
 ## Community Repo ##
 # [exodia-community-repo]
@@ -321,7 +321,7 @@ bspc wm -r
 
 # Configure Zsh prompt and theme
 echo "Configuring Zsh prompt..."
-cat <<EOF >> ~/.zshrc
+cat <<EOF | sudo tee ~/.zshrc
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]];
     
@@ -486,7 +486,7 @@ echo -e "\033[1;31m
 		⠀⠀⠉⠛⢿⣶⣤⡀⠀⠀⠀⣤⣀⣸⣿⣿⡇⣀⡤⠀⠀⠀⢀⣤⣾⡿⠛⠁⠀⠀
 		⠀⠀⠀⠀⠀⠈⠙⠁⣰⣦⣀⠀⠙⠻⣿⡿⠟⠉⠀⣀⣴⣆⠘⠋⠁⠀⠀⠀⠀⠀
 		⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⣿⣦⣄⠀⢀⣠⣴⡿⠟⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀
-	        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 \033[0m"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh. #
@@ -509,6 +509,6 @@ export sudo_PROMPT="[] Enter sudo Password"
 EOF
 
 # Reload the shell configuration
-source ~/.zshrc
+zsh
 
 echo "Setup complete!"
