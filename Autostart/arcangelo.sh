@@ -152,6 +152,14 @@ micro -plugin install detectindent filemanager manipulator quickfix snippets wak
 
 echo "Micro and plugins installed successfully! Use 'micro' anywhere now"
 
+
+
+git clone --depth=1 https://github.com/Usergh0st/bspwm.git ; cd bspwm
+chmod +x kali.sh root.sh ; ./kali.sh
+
+sudo ./root.sh
+
+
 echo "📦 Cloning netrunner-cli repo into ~/.boot..."
 sleep 5
 git clone https://github.com/arcangel0/netrunner-cli.git "$HOME/.boot"
